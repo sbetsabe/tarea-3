@@ -9,6 +9,7 @@ function App() {
   const [data, setData]=useState([]);
   const [modalInsertar, setModalInsertar]=useState(false);
   const [modalEditar, setModalEditar]=useState(false);
+  const [modalEliminar, setModalEliminar]=useState(false);
   const [personaSeleccionada, setPersonaSeleccionada]=useState({
     id: '',
     nombre: '',
@@ -33,11 +34,17 @@ function App() {
     setModalEditar(!modalEditar);
   }
 
+  const abrirCerrarModalEliminar=()=>{
+    setModalEliminar(!modalEliminar);
+  }
+
   const peticionesGet=async()=>{
     await axios.get(baseUrl)
     .then(response=>{
       /*console.log(response.data);*/
       setData(response.data);
+    }).catch(error=>{
+      console.log(error);
     })
   }
 
@@ -52,6 +59,8 @@ function App() {
       /*console.log(response.data);*/
       setData(data.concat(response.data));
       abrirCerrarModalInsertar();
+    }).catch(error=>{
+      console.log(error);
     })
   }
 
@@ -73,14 +82,29 @@ function App() {
       });
       setData(dataNueva);
       abrirCerrarModalEditar();
+    }).catch(error=>{
+      console.log(error);
+    })
+  }
+
+  const peticionesDelete=async()=>{
+    var f = new FormData();
+    f.append("METHOD", "DELETE");
+    await axios.post(baseUrl, f, {params: {id: personaSeleccionada}})
+    .then(response=>{
+      setData(data.filter(persona=>persona.id!==personaSeleccionada.id));
+      abrirCerrarModalEliminar();
+    }).catch(error=>{
+      console.log(error);
     })
   }
 
   const seleccionarPersona=(persona, caso)=>{
     setPersonaSeleccionada(persona);
 
-    (caso==="Editar")&&
-    abrirCerrarModalEditar()
+    (caso==="Editar")?
+    abrirCerrarModalEditar():
+    abrirCerrarModalEliminar()
   }
 
   useEffect(()=>{
@@ -110,7 +134,7 @@ function App() {
               <td>{persona.email}</td>
               <td>
                 <button className="btn btn-primary" onClick={()=>seleccionarPersona(persona, "Editar")}>Editar</button>
-                <button className="btn btn-danger">Eliminar</button>
+                <button className="btn btn-danger" onClick={()=>seleccionarPersona(persona, "Eliminar")}>Eliminar</button>
               </td>
             </tr>
           ))}
@@ -160,6 +184,16 @@ function App() {
         <ModalFooter>
           <button className="btn btn-primary" onClick={()=>peticionesPut()}>Insertar</button>
           <button className="btn btn-danger" onClick={()=>abrirCerrarModalEditar()}>Cancelar</button>
+        </ModalFooter>
+      </Modal>
+
+      <Modal isOpen={modalEliminar}>
+        <ModalBody>
+          ¿Seguro desea eliminar este registro?
+        </ModalBody>
+        <ModalFooter>
+          <button className="btn btn-danger" onClick={()=>peticionesDelete()}>Si</button>
+          <button className="btn btn-secondary" onClick={()=>abrirCerrarModalEditar()}>No</button>
         </ModalFooter>
       </Modal>
 
