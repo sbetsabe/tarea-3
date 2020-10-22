@@ -19,7 +19,7 @@ function App() {
     const {name, value}=e.target
     setPersonaSeleccionada((prevState)=>({
       ...prevState,
-      name: [value]
+      [name]: value
     }))
     console.log(personaSeleccionada);
   }
