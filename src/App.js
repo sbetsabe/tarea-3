@@ -90,7 +90,7 @@ function App() {
   const peticionesDelete=async()=>{
     var f = new FormData();
     f.append("METHOD", "DELETE");
-    await axios.post(baseUrl, f, {params: {id: personaSeleccionada}})
+    await axios.post(baseUrl, f, {params: {id: personaSeleccionada.id}})
     .then(response=>{
       setData(data.filter(persona=>persona.id!==personaSeleccionada.id));
       abrirCerrarModalEliminar();
@@ -189,11 +189,11 @@ function App() {
 
       <Modal isOpen={modalEliminar}>
         <ModalBody>
-          ¿Seguro desea eliminar este registro?
+        ¿Estás seguro que deseas eliminar el registro de {personaSeleccionada && personaSeleccionada.nombre}?
         </ModalBody>
         <ModalFooter>
-          <button className="btn btn-danger" onClick={()=>peticionesDelete()}>Si</button>
-          <button className="btn btn-secondary" onClick={()=>abrirCerrarModalEditar()}>No</button>
+          <button className="btn btn-danger" onClick={()=>peticionesDelete()}>Sí</button>
+          <button className="btn btn-secondary" onClick={()=>abrirCerrarModalEliminar()}>No</button>
         </ModalFooter>
       </Modal>
 
