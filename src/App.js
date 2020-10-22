@@ -7,6 +7,11 @@ function App() {
 
   const baseUrl="http://localhost:8080/apiFrameworks/";
   const [data, setData]=useState([]);
+  const [modalInsertar, setModalInsertar]=useState(false);
+
+  const abrirCerrarModalInsertar=()=>{
+    setModalInsertar(!modalInsertar);
+  }
 
   const peticionesGet=async()=>{
     await axios.get(baseUrl)
@@ -22,6 +27,7 @@ function App() {
 
   return (
     <div className="container">
+      <button className="btn btn-success"  onClick={()=>abrirCerrarModalInsertar()} >Insertar</button>
       <table className="table table-striped">
         <thead>
           <tr>
@@ -47,6 +53,29 @@ function App() {
           ))}
         </tbody>
       </table>
+
+      <Modal isOpen={modalInsertar}>
+        <ModalHeader>Insertar Framework</ModalHeader>
+        <ModalBody>
+          <div className="form-group">
+            <label>Nombre:</label>
+            <br/>
+            <input type="text" className="form-control"/>
+            <br/>
+            <label>Lanzamiento:</label>
+            <br/>
+            <input type="text" className="form-control"/>
+            <br/>
+            <label>Desarrollador:</label>
+            <br/>
+            <input type="text" className="form-control"/>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <button className="btn btn-primary">Insertar</button>
+          <button className="btn btn-danger" onClick={()=>abrirCerrarModalInsertar()}>Cancelar</button>
+        </ModalFooter>
+      </Modal>
     </div>
   );
 }
