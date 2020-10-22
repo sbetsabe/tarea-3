@@ -114,7 +114,7 @@ function App() {
 
   return (
     <div className="container" style={{textAlign:'center'}}>
-      <Jumbotron fluid>
+      <Jumbotron fluid style={{backgroundColor:'#'}}>
       <Container fluid>
         <h2>Sistema de manejo de usuarios</h2>
       </Container>
