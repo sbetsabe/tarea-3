@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Jumbotron, Container } from 'reactstrap';
 import {Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import axios from 'axios';
 
@@ -113,8 +114,14 @@ function App() {
 
   return (
     <div className="container" style={{textAlign:'center'}}>
-      <h2>Sistema de manejo de usuarios</h2>
-      <button className="btn btn-success"  onClick={()=>abrirCerrarModalInsertar()} >Insertar</button>
+      <Jumbotron fluid>
+      <Container fluid>
+        <h2>Sistema de manejo de usuarios</h2>
+      </Container>
+      </Jumbotron>
+      
+      <button className="btn btn-primary btn-lg btn-block"  onClick={()=>abrirCerrarModalInsertar()} >Añadir nuevo registro</button>
+      <br/>
       <table className="table table-striped">
         <thead>
           <tr>
