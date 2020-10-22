@@ -21,7 +21,7 @@ function App() {
   },[])
 
   return (
-    <div>
+    <div className="container">
       <table className="table table-striped">
         <thead>
           <tr>
