@@ -8,6 +8,7 @@ function App() {
   const baseUrl="http://localhost:8080/apiFrameworks/";
   const [data, setData]=useState([]);
   const [modalInsertar, setModalInsertar]=useState(false);
+  const [modalEditar, setModalEditar]=useState(false);
   const [personaSeleccionada, setPersonaSeleccionada]=useState({
     id: '',
     nombre: '',
@@ -26,6 +27,10 @@ function App() {
 
   const abrirCerrarModalInsertar=()=>{
     setModalInsertar(!modalInsertar);
+  }
+
+  const abrirCerrarModalEditar=()=>{
+    setModalEditar(!modalEditar);
   }
 
   const peticionesGet=async()=>{
@@ -48,6 +53,34 @@ function App() {
       setData(data.concat(response.data));
       abrirCerrarModalInsertar();
     })
+  }
+
+  const peticionesPut=async()=>{
+    var f = new FormData();
+    f.append("nombre", personaSeleccionada.nombre);
+    f.append("apellidos", personaSeleccionada.apellidos);
+    f.append("email", personaSeleccionada.email);
+    f.append("METHOD", "PUT");
+    await axios.post(baseUrl, f, {params: {id: personaSeleccionada.id}})
+    .then(response=>{
+      var dataNueva = data;
+      dataNueva.map(persona=>{
+        if(persona.id===personaSeleccionada.id){
+          persona.nombre=personaSeleccionada.nombre;
+          persona.apellidos=personaSeleccionada.apellidos;
+          persona.email=personaSeleccionada.email;
+        }
+      });
+      setData(dataNueva);
+      abrirCerrarModalEditar();
+    })
+  }
+
+  const seleccionarPersona=(persona, caso)=>{
+    setPersonaSeleccionada(persona);
+
+    (caso==="Editar")&&
+    abrirCerrarModalEditar()
   }
 
   useEffect(()=>{
@@ -76,7 +109,7 @@ function App() {
               <td>{persona.apellidos}</td>
               <td>{persona.email}</td>
               <td>
-                <button className="btn btn-primary">Editar</button>
+                <button className="btn btn-primary" onClick={()=>seleccionarPersona(persona, "Editar")}>Editar</button>
                 <button className="btn btn-danger">Eliminar</button>
               </td>
             </tr>
@@ -106,6 +139,30 @@ function App() {
           <button className="btn btn-danger" onClick={()=>abrirCerrarModalInsertar()}>Cancelar</button>
         </ModalFooter>
       </Modal>
+
+      <Modal isOpen={modalEditar}>
+        <ModalHeader>Editar persona</ModalHeader>
+        <ModalBody>
+          <div className="form-group" >
+            <label>Nombre:</label>
+            <br/>
+            <input type="text" className="form-control" name="nombre" onChange={handleChange} value={personaSeleccionada && personaSeleccionada.nombre}/>
+            <br/>
+            <label>Apellidos:</label>
+            <br/>
+            <input type="text" className="form-control" name="apellidos" onChange={handleChange} value={personaSeleccionada && personaSeleccionada.apellidos}/>
+            <br/>
+            <label>Email:</label>
+            <br/>
+            <input type="text" className="form-control" name="email" onChange={handleChange} value={personaSeleccionada && personaSeleccionada.email}/>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <button className="btn btn-primary" onClick={()=>peticionesPut()}>Insertar</button>
+          <button className="btn btn-danger" onClick={()=>abrirCerrarModalEditar()}>Cancelar</button>
+        </ModalFooter>
+      </Modal>
+
     </div>
   );
 }
